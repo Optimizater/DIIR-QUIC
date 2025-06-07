@@ -3,7 +3,6 @@ This module provides tools for printing debugging information and some parameter
 """
 
 import datetime
-import os
 
 DEBUG = False     # A flag to enable or disable debug mode.
 MAKE_LOG = False  # A flag to enable or disable log.
@@ -14,19 +13,6 @@ MCP_GAMMA = 2
 EBIC_GAMMA = 0.5
 
 RAND_SEED = 1
-
-
-current_dir = os.path.dirname(os.path.abspath(__file__))
-data_file_relative = os.path.join(current_dir, "..", "SPINCOVSE-0", "realdata")
-DATA_DIR_PATH = os.path.abspath(data_file_relative)
-
-DATA_PATH_DICT = {
-    "Arabidopsis": f"{DATA_DIR_PATH}/Arabidopsis.mat",
-    "Estrogen": f"{DATA_DIR_PATH}/ER.mat",
-    "hereditarybc": f"{DATA_DIR_PATH}/hereditarybc.mat",
-    "Leukemia": f"{DATA_DIR_PATH}/Leukemia.mat",
-    "Lymph": f"{DATA_DIR_PATH}/Lymph.mat",
-}
 
 
 def printDecorate(func, color="black"):

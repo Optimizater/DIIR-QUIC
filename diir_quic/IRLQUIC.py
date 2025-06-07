@@ -182,7 +182,7 @@ def KKT_condition_mcp(S: np.ndarray, X: np.ndarray, X_inv: np.ndarray, lam: floa
 
 
 
-def iRL1_simplified(
+def iRL1_simplified2(
     SampleCov: np.ndarray,
     reduce_para: float,
     perturbationInit: np.ndarray,
@@ -194,7 +194,7 @@ def iRL1_simplified(
     alpha=0.5,
     Sigma=None,
     msg=True,
-) -> tuple[np.ndarray, int, list[float], list[float]]:
+) -> tuple[np.ndarray, int, list[float], list[float], list[float]]:
     """
     Main loop for the Extrapolated Proximal Iteratively Reweighted L1 algorithm.
 
@@ -226,8 +226,15 @@ def iRL1_simplified(
     perturbation = np.copy(perturbationInit)
     cnt = 0
 
+    f_val_list = []
     KKT_list = []
     time_list = []
+
+    f_val_list.append(
+        objective_function(
+            SampleCov, iterate, regularizationPara, modelPara, perturbation
+        )
+    )
 
     start_time = time.time()
     # Iterative loop
@@ -241,7 +248,7 @@ def iRL1_simplified(
             print(f"============ iter: {cnt} ============")
             msg_quic = 2
 
-        [iterateNext, iterateNextInv, _, quic_time, _, _, _, _, _, _] = IRL_core.quic(
+        [iterateNext, iterateNextInv, _, _, _, _, _, _, _, _] = IRL_core.quic(
             S=SampleCov,
             L=regularizationPara * weight,
             mode="default",
@@ -261,7 +268,7 @@ def iRL1_simplified(
         time_list.append(time.time() - start_time)
 
         if msg:
-            print(f"===== KKT: {optRes} =====")
+            print(f"===== f_val: {f_val_list[-1]}, KKT: {optRes} =====")
 
         if (optRes < tolerance) or cnt >= MaxIter:
             break
@@ -269,12 +276,18 @@ def iRL1_simplified(
         # Step 3: Update the perturbation
         perturbation = (1.0 - alpha) * perturbation + alpha * reduce_para * perturbation
 
+        f_val_list.append(
+            objective_function(
+                SampleCov, iterateNext, regularizationPara, modelPara, perturbation
+            )
+        )
+
         # Step 4: Prepare for the next iteration
         iterate = np.copy(iterateNext)
         iterate_inv = np.copy(iterateNextInv)
         cnt += 1
 
-    output = (iterate, cnt, KKT_list, time_list)
+    output = (iterate, cnt, f_val_list, KKT_list, time_list)
 
     return output
 
@@ -291,7 +304,7 @@ def iRL1_scad(
     alpha=0.5,
     Sigma=None,
     msg=True,
-):
+) -> tuple[np.ndarray, int, list[float], list[float], list[float]]:
     """
     Main loop for the Extrapolated Proximal Iteratively Reweighted L1 algorithm. (SCAD)
 
@@ -399,7 +412,7 @@ def iRL1_mcp(
     alpha=0.5,
     Sigma=None,
     msg=True,
-):
+) -> tuple[np.ndarray, int, list[float], list[float], list[float]]:
     """
     Main loop for the Extrapolated Proximal Iteratively Reweighted L1 algorithm. (SCAD)
 
