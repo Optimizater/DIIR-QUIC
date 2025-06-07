@@ -36,8 +36,8 @@ You can use either version by importing the corresponding module in your Python 
 
 ```python
 # Example usage
-import irl.lqcov.lqcov as lqcov_m1
-import irl.lqcov.lqcov_cython as lqcov_m2
+import diir_quic.lqcov.lqcov as lqcov_m1
+import diir_quic.lqcov.lqcov_cython as lqcov_m2
 ```
 
 Each version provides the same interface:
