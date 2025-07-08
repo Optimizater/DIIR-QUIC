@@ -9,7 +9,7 @@ DIIR-QUIC is a novel **Damped Inexact Iteratively Reweighted** algorithm based o
 The algorithm addresses the following regularized log-determinant optimization problem:
 
 $$
-\min_{\boldsymbol{X} \succ 0} \left\{ \text{tr}(\boldsymbol{S}\boldsymbol{X}) - \log \det \boldsymbol{X} + \rho \sum_{i,j} \phi(|X_{ij}|) \right\},
+\min_{\boldsymbol{X} \succ 0} \{ \text{tr}(\boldsymbol{S}\boldsymbol{X}) - \log \det \boldsymbol{X} + \rho \sum_{i,j} \phi(|X_{ij}|) \},
 $$
 
 where:
